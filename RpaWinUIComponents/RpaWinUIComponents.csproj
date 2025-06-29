@@ -31,4 +31,10 @@
     </Page>
   </ItemGroup>
   
+  <ItemGroup>
+    <Page Update="AdvancedDataGrid\Controls\Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  
 </Project>

@@ -1,19 +1,212 @@
+<!-- RpaWinUIComponents.Demo/MainWindow.xaml -->
 <?xml version="1.0" encoding="utf-8"?>
 <Window
     x:Class="RpaWinUIComponents.Demo.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:RpaWinUIComponents.Demo"
+    xmlns:controls="using:RpaWinUIComponents.AdvancedDataGrid.Controls"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="RpaWinUIComponents.Demo">
+    Title="RpaWinUIComponents.Demo - AdvancedDataGrid Showcase">
 
     <Window.SystemBackdrop>
         <MicaBackdrop />
     </Window.SystemBackdrop>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" 
+                Background="{ThemeResource SystemControlBackgroundAccentBrush}" 
+                Padding="20,15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Vertical">
+                    <TextBlock Text="🚀 AdvancedDataGrid Demo" 
+                               FontSize="24" 
+                               FontWeight="Bold" 
+                               Foreground="White"/>
+                    <TextBlock Text="Komplexný DataGrid s real-time validáciou, copy/paste a Excel-like funkcionalitou" 
+                               FontSize="14" 
+                               Foreground="White" 
+                               Opacity="0.9"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <TextBlock Grid.Column="1" 
+                           Text="WinUI 3 • .NET 8 • MVVM"
+                           FontSize="12"
+                           Foreground="White"
+                           Opacity="0.7"
+                           VerticalAlignment="Bottom"/>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1" Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Control Panel -->
+            <Border Grid.Row="0" 
+                    Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" 
+                    BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" 
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="15"
+                    Margin="0,0,0,10">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="10">
+
+                        <!-- Data Operations -->
+                        <Border Background="{ThemeResource SystemControlBackgroundAltHighBrush}"
+                                BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                                BorderThickness="1"
+                                CornerRadius="6"
+                                Padding="10">
+                            <StackPanel>
+                                <TextBlock Text="📊 Dáta" 
+                                           FontWeight="SemiBold" 
+                                           Margin="0,0,0,8"
+                                           HorizontalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Button x:Name="ValidateAllButton"
+                                            Content="✅ Validovať všetko" 
+                                            Click="ValidateAllButton_Click"
+                                            Style="{ThemeResource AccentButtonStyle}"
+                                            ToolTipService.ToolTip="Spustiť validáciu všetkých riadkov"/>
+
+                                    <Button x:Name="LoadFromDatabaseButton"
+                                            Content="🔄 Načítať z DB" 
+                                            Click="LoadFromDatabaseButton_Click"
+                                            ToolTipService.ToolTip="Simulácia načítania dát z databázy"/>
+
+                                    <Button x:Name="ExportDataButton"
+                                            Content="📤 Export" 
+                                            Click="ExportDataButton_Click"
+                                            ToolTipService.ToolTip="Export dát do DataTable"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Cleanup Operations -->
+                        <Border Background="{ThemeResource SystemControlBackgroundAltHighBrush}"
+                                BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                                BorderThickness="1"
+                                CornerRadius="6"
+                                Padding="10">
+                            <StackPanel>
+                                <TextBlock Text="🧹 Vyčistenie" 
+                                           FontWeight="SemiBold" 
+                                           Margin="0,0,0,8"
+                                           HorizontalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Button x:Name="ClearDataButton"
+                                            Content="🗑️ Vymazať dáta" 
+                                            Click="ClearDataButton_Click"
+                                            ToolTipService.ToolTip="Vymazať všetky dáta v gridu"/>
+
+                                    <Button x:Name="RemoveEmptyRowsButton"
+                                            Content="🚫 Prázdne riadky" 
+                                            Click="RemoveEmptyRowsButton_Click"
+                                            ToolTipService.ToolTip="Odstrániť prázdne riadky"/>
+
+                                    <Button x:Name="RemoveInvalidRowsButton"
+                                            Content="❌ Nevalidné riadky" 
+                                            Click="RemoveInvalidRowsButton_Click"
+                                            Style="{ThemeResource DangerButtonStyle}"
+                                            ToolTipService.ToolTip="Vymazať riadky podľa custom validácie"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Advanced Operations -->
+                        <Border Background="{ThemeResource SystemControlBackgroundAltHighBrush}"
+                                BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                                BorderThickness="1"
+                                CornerRadius="6"
+                                Padding="10">
+                            <StackPanel>
+                                <TextBlock Text="⚙️ Pokročilé" 
+                                           FontWeight="SemiBold" 
+                                           Margin="0,0,0,8"
+                                           HorizontalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Button x:Name="CustomValidationButton"
+                                            Content="🔍 Custom validácia" 
+                                            Click="CustomValidationButton_Click"
+                                            ToolTipService.ToolTip="Pridať vlastné validačné pravidlá"/>
+
+                                    <Button x:Name="ShowStatsButton"
+                                            Content="📈 Štatistiky" 
+                                            Click="ShowStatsButton_Click"
+                                            ToolTipService.ToolTip="Zobraziť štatistiky gridu"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <!-- AdvancedDataGrid -->
+            <Border Grid.Row="1"
+                    Background="{ThemeResource SystemControlBackgroundAltHighBrush}"
+                    BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8">
+                <controls:AdvancedDataGridControl x:Name="MainDataGrid"
+                                                  Margin="1"/>
+            </Border>
+        </Grid>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="2" 
+                Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" 
+                BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}" 
+                BorderThickness="0,1,0,0"
+                Padding="20,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock x:Name="StatusTextBlock"
+                           Grid.Column="0"
+                           Text="Pripravené na použitie"
+                           FontSize="12"
+                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                           VerticalAlignment="Center"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="15">
+                    <TextBlock x:Name="RowCountTextBlock"
+                               Text="Riadkov: 0"
+                               FontSize="12"
+                               Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                               VerticalAlignment="Center"/>
+
+                    <TextBlock x:Name="ValidationStatusTextBlock"
+                               Text="Validácia: OK"
+                               FontSize="12"
+                               Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </Border>
 
     </Grid>
 </Window>

@@ -1,0 +1,340 @@
+<!-- RpaWinUIComponents/AdvancedDataGrid/Controls/Themes/Generic.xaml -->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:RpaWinUIComponents.AdvancedDataGrid.Controls"
+    xmlns:converters="using:RpaWinUIComponents.AdvancedDataGrid.Converters"
+    xmlns:helpers="using:RpaWinUIComponents.AdvancedDataGrid.Helpers"
+    xmlns:behaviors="using:RpaWinUIComponents.AdvancedDataGrid.Behaviors"
+    xmlns:models="using:RpaWinUIComponents.AdvancedDataGrid.Models"
+    xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
+    xmlns:winui="using:CommunityToolkit.WinUI.Behaviors">
+
+    <!-- Converters -->
+    <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    <converters:ValidationErrorConverter x:Key="ValidationErrorConverter" />
+
+    <!-- Default Style for AdvancedDataGridControl -->
+    <Style TargetType="controls:AdvancedDataGridControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:AdvancedDataGridControl">
+                    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                        <Grid.RowDefinitions>
+                            <!-- Validation Progress -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- Main Content -->
+                            <RowDefinition Height="*"/>
+                            <!-- Toggle Button Panel -->
+                            <RowDefinition Height="Auto"/>
+                            <!-- Keyboard Shortcuts Helper -->
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Validation Progress Panel -->
+                        <Border Grid.Row="0" 
+                                x:Name="PART_ValidationProgress"
+                                Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" 
+                                Padding="12,8"
+                                BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                                BorderThickness="0,0,0,1"
+                                Visibility="{TemplateBinding IsValidating, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Status Text -->
+                                <TextBlock Grid.Row="0" Grid.Column="0"
+                                           Text="{TemplateBinding ValidationStatus}"
+                                           FontSize="12"
+                                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                                           VerticalAlignment="Center"/>
+
+                                <!-- Progress Percentage -->
+                                <TextBlock Grid.Row="0" Grid.Column="1"
+                                           Text="{TemplateBinding ValidationProgress, StringFormat={}{0:F0}%}"
+                                           FontSize="12"
+                                           FontWeight="Bold"
+                                           Foreground="{ThemeResource SystemAccentColor}"
+                                           Margin="8,0,0,0"
+                                           VerticalAlignment="Center"/>
+
+                                <!-- Progress Bar -->
+                                <ProgressBar Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"
+                                             Value="{TemplateBinding ValidationProgress}"
+                                             Maximum="100"
+                                             Height="4"
+                                             Background="{ThemeResource SystemControlBackgroundBaseLowBrush}"
+                                             Foreground="{ThemeResource SystemAccentColor}"
+                                             BorderThickness="0"
+                                             Margin="0,6,0,0"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Main ItemsView -->
+                        <ScrollViewer Grid.Row="1" 
+                                      ZoomMode="Disabled" 
+                                      HorizontalScrollMode="Auto" 
+                                      VerticalScrollMode="Auto"
+                                      HorizontalScrollBarVisibility="Auto"
+                                      VerticalScrollBarVisibility="Auto">
+                            <ItemsView x:Name="PART_ItemsView"
+                                       ItemsSource="{TemplateBinding ItemsSource}"
+                                       SelectionMode="Single"
+                                       Background="{ThemeResource SystemControlBackgroundAltHighBrush}"
+                                       BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                                       BorderThickness="1">
+
+                                <interactivity:Interaction.Behaviors>
+                                    <behaviors:KeyboardNavigationBehavior NavigationService="{Binding NavigationService}" />
+                                </interactivity:Interaction.Behaviors>
+
+                                <ItemsView.Layout>
+                                    <UniformGridLayout Orientation="Vertical" 
+                                                       MinItemWidth="100" 
+                                                       MinItemHeight="30" 
+                                                       ItemsStretch="Fill"/>
+                                </ItemsView.Layout>
+
+                                <ItemsView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:GridDataRow">
+                                        <Grid Background="{ThemeResource SystemControlBackgroundAltHighBrush}"
+                                              BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}"
+                                              BorderThickness="0,0,0,1"
+                                              MinHeight="30">
+
+                                            <!-- Row content will be dynamically generated based on columns -->
+                                            <Grid x:Name="CellsContainer">
+                                                <Grid.ColumnDefinitions>
+                                                    <!-- Dynamic columns will be added here -->
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- Cells ItemsControl -->
+                                                <ItemsControl ItemsSource="{x:Bind Cells}" 
+                                                              Grid.ColumnSpan="999">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <Grid />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate x:DataType="models:CellViewModel">
+                                                            <Border Background="{ThemeResource SystemControlBackgroundAltHighBrush}"
+                                                                    BorderBrush="{ThemeResource SystemControlForegroundBaseLowBrush}"
+                                                                    BorderThickness="1,0,0,0"
+                                                                    Padding="8,4"
+                                                                    MinWidth="80"
+                                                                    MinHeight="30">
+
+                                                                <interactivity:Interaction.Behaviors>
+                                                                    <behaviors:ValidationBehavior CellViewModel="{x:Bind}" />
+                                                                    <behaviors:CellEditingBehavior CellViewModel="{x:Bind}" />
+                                                                </interactivity:Interaction.Behaviors>
+
+                                                                <!-- Cell Content -->
+                                                                <Grid>
+                                                                    <!-- Display Mode -->
+                                                                    <TextBlock Text="{x:Bind Value, Mode=OneWay}"
+                                                                               VerticalAlignment="Center"
+                                                                               TextTrimming="CharacterEllipsis"
+                                                                               Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                                                                               Visibility="{x:Bind IsEditing, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Invert}"/>
+
+                                                                    <!-- Edit Mode -->
+                                                                    <TextBox Text="{x:Bind Value, Mode=TwoWay}"
+                                                                             VerticalAlignment="Stretch"
+                                                                             BorderThickness="0"
+                                                                             Background="Transparent"
+                                                                             AcceptsReturn="True"
+                                                                             TextWrapping="Wrap"
+                                                                             Visibility="{x:Bind IsEditing, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                                                </Grid>
+
+                                                                <!-- Validation Error Border -->
+                                                                <Border BorderBrush="{x:Bind HasValidationError, Mode=OneWay, Converter={StaticResource ValidationErrorConverter}}"
+                                                                        BorderThickness="{x:Bind HasValidationError, Mode=OneWay, Converter={StaticResource ValidationErrorConverter}, ConverterParameter=Thickness}"
+                                                                        Background="{x:Bind HasValidationError, Mode=OneWay, Converter={StaticResource ValidationErrorConverter}, ConverterParameter=Background}"
+                                                                        IsHitTestVisible="False"/>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </Grid>
+
+                                            <!-- Row validation error indicator -->
+                                            <Rectangle Fill="{ThemeResource SystemErrorTextColor}"
+                                                       Width="4"
+                                                       HorizontalAlignment="Left"
+                                                       Visibility="{x:Bind HasValidationErrors, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ItemsView.ItemTemplate>
+                            </ItemsView>
+                        </ScrollViewer>
+
+                        <!-- Toggle Button Panel -->
+                        <Border Grid.Row="2" 
+                                Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" 
+                                Padding="6"
+                                BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                                BorderThickness="0,1,0,0">
+                            <Button x:Name="ToggleKeyboardShortcutsButton"
+                                    Command="{Binding ToggleKeyboardShortcutsCommand}"
+                                    Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}"
+                                    BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                                    BorderThickness="1"
+                                    Padding="8,4"
+                                    HorizontalAlignment="Center"
+                                    CornerRadius="4"
+                                    ToolTipService.ToolTip="Zobraziť/skryť klávesové skratky">
+                                <StackPanel Orientation="Horizontal">
+                                    <!-- Ikona -->
+                                    <TextBlock x:Name="ToggleIcon"
+                                               Text="▼"
+                                               FontSize="12" 
+                                               Margin="0,0,4,0"
+                                               VerticalAlignment="Center"/>
+                                    <TextBlock Text="Klávesové skratky" 
+                                               FontSize="11" 
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Button>
+                        </Border>
+
+                        <!-- Keyboard Shortcuts Helper -->
+                        <Border x:Name="PART_KeyboardShortcuts"
+                                Grid.Row="3" 
+                                Background="{ThemeResource SystemControlBackgroundChromeMediumLowBrush}" 
+                                Padding="8,6"
+                                BorderBrush="{ThemeResource SystemControlForegroundBaseMediumLowBrush}"
+                                BorderThickness="0,1,0,0"
+                                Visibility="{TemplateBinding IsKeyboardShortcutsVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+                                <TextBlock FontSize="10" 
+                                           Foreground="{ThemeResource SystemControlForegroundBaseHighBrush}"
+                                           FontWeight="SemiBold"
+                                           HorizontalAlignment="Center"
+                                           Text="⌨️ KLÁVESOVÉ SKRATKY"
+                                           Margin="0,0,0,2"/>
+                                <TextBlock FontSize="9" 
+                                           Foreground="{ThemeResource SystemControlForegroundBaseMediumBrush}"
+                                           HorizontalAlignment="Center"
+                                           TextWrapping="Wrap">
+                                    <Run Text="📋 Navigácia:" FontWeight="SemiBold"/>
+                                    <Run Text="Tab/Shift+Tab = ďalšia/predchádzajúca bunka • Enter = ďalší riadok • F2 = začať editáciu"/>
+                                    <LineBreak/>
+                                    <Run Text="✏️ Editácia:" FontWeight="SemiBold"/>
+                                    <Run Text="ESC = zrušiť zmeny • Delete = vymazať obsah • Shift+Enter = nový riadok v bunke"/>
+                                    <LineBreak/>
+                                    <Run Text="📋 Clipboard:" FontWeight="SemiBold"/>
+                                    <Run Text="Ctrl+C = kopírovať • Ctrl+V = vložiť"/>
+                                    <LineBreak/>
+                                    <Run Text="🔄 Sorting:" FontWeight="SemiBold"/>
+                                    <Run Text="Klik na header = sort (prázdne riadky zostávajú na konci)"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Visual States -->
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="ValidationStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="HasValidationError">
+                                    <VisualState.Setters>
+                                        <Setter Target="PART_ItemsView.BorderBrush" Value="{ThemeResource SystemErrorTextColor}"/>
+                                        <Setter Target="PART_ItemsView.BorderThickness" Value="2"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="KeyboardShortcutsStates">
+                                <VisualState x:Name="KeyboardShortcutsHidden"/>
+                                <VisualState x:Name="KeyboardShortcutsVisible">
+                                    <VisualState.Setters>
+                                        <Setter Target="ToggleIcon.Text" Value="▲"/>
+                                        <Setter Target="ToggleKeyboardShortcutsButton.Background" Value="{ThemeResource SystemAccentColor}"/>
+                                        <Setter Target="ToggleKeyboardShortcutsButton.Foreground" Value="{ThemeResource SystemControlForegroundChromeWhiteBrush}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Cell Visual States Template -->
+    <Style x:Key="DataGridCellStyle" TargetType="Border">
+        <Setter Property="Background" Value="{ThemeResource SystemControlBackgroundAltHighBrush}"/>
+        <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundBaseLowBrush}"/>
+        <Setter Property="BorderThickness" Value="1,0,0,0"/>
+        <Setter Property="Padding" Value="8,4"/>
+        <Setter Property="MinHeight" Value="30"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Border">
+                    <Grid Background="{TemplateBinding Background}"
+                          Padding="{TemplateBinding Padding}">
+
+                        <ContentPresenter Content="{TemplateBinding Child}"/>
+
+                        <!-- Visual state indicators -->
+                        <Border x:Name="SelectionBorder"
+                                BorderBrush="{ThemeResource SystemAccentColor}"
+                                BorderThickness="2"
+                                Background="Transparent"
+                                Opacity="0"/>
+
+                        <Border x:Name="ValidationBorder"
+                                BorderBrush="{ThemeResource SystemErrorTextColor}"
+                                BorderThickness="2"
+                                Background="Transparent"
+                                Opacity="0"/>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualState x:Name="Unselected"/>
+                                <VisualState x:Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Target="SelectionBorder.Opacity" Value="1"/>
+                                        <Setter Target="SelectionBorder.Background" Value="{ThemeResource SystemAccentColorLight3}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="EditingStates">
+                                <VisualState x:Name="NotEditing"/>
+                                <VisualState x:Name="Editing">
+                                    <VisualState.Setters>
+                                        <Setter Target="SelectionBorder.Background" Value="{ThemeResource SystemAccentColorLight2}"/>
+                                        <Setter Target="SelectionBorder.BorderThickness" Value="3"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+
+                            <VisualStateGroup x:Name="ValidationStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="HasValidationError">
+                                    <VisualState.Setters>
+                                        <Setter Target="ValidationBorder.Opacity" Value="1"/>
+                                        <Setter Target="ValidationBorder.Background" Value="{ThemeResource SystemErrorBackgroundColor}"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

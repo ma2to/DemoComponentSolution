@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "RpaWinUIComponents.Demo (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "RpaWinUIComponents.Demo (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36221.1 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpaWinUIComponents", "RpaWinUIComponents\RpaWinUIComponents.csproj", "{E2D096EB-8B92-4D06-B0E9-9BFE085716AA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RpaWinUIComponents.Demo", "RpaWinUIComponents.Demo\RpaWinUIComponents.Demo.csproj", "{00E14CE1-D3ED-4A17-8575-24AEB07D9FC8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E2D096EB-8B92-4D06-B0E9-9BFE085716AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2D096EB-8B92-4D06-B0E9-9BFE085716AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2D096EB-8B92-4D06-B0E9-9BFE085716AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2D096EB-8B92-4D06-B0E9-9BFE085716AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00E14CE1-D3ED-4A17-8575-24AEB07D9FC8}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{00E14CE1-D3ED-4A17-8575-24AEB07D9FC8}.Debug|Any CPU.Build.0 = Debug|x64
+		{00E14CE1-D3ED-4A17-8575-24AEB07D9FC8}.Debug|Any CPU.Deploy.0 = Debug|x64
+		{00E14CE1-D3ED-4A17-8575-24AEB07D9FC8}.Release|Any CPU.ActiveCfg = Release|x64
+		{00E14CE1-D3ED-4A17-8575-24AEB07D9FC8}.Release|Any CPU.Build.0 = Release|x64
+		{00E14CE1-D3ED-4A17-8575-24AEB07D9FC8}.Release|Any CPU.Deploy.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EF2B53D0-012D-45A3-9A13-4EEEF3FD960D}
+	EndGlobalSection
+EndGlobal
